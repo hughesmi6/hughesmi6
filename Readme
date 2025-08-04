@@ -1,0 +1,4 @@
+Deployment
+​Given that the game is a single HTML file with no complex backend, a great option is to deploy it on a static website host. This is often free and very easy to set up.
+​For Schools or Districts: The most secure option would be to host it on the school's learning management system (LMS) or a private server. This keeps it within a controlled environment and ensures students don't need to navigate to external websites.
+​For Public Access: Platforms like GitHub Pages, Netlify, or Vercel are excellent choices. You can get a custom domain and have the game live on the internet in minutes, completely free of charge. This allows parents, students, and other educators to access it from anywhere.
