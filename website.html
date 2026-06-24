@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alba Aerial — Drone Services, Scotland</title>
+<meta name="description" content="Aerial photography, mapping, agricultural monitoring and inspections by drone, flying across Scotland.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg: #0A0E13;
+--surface: #12161D;
+--surface-2: #1A1F28;
+--line: #262C36;
+--text: #F3F5F2;
+--muted: #8B93A0;
+--signal: #FF5A1F;
+--data: #2EE6D6;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html{scroll-behavior:smooth;}
+
+body{
+background:var(--bg);
+color:var(--text);
+font-family:'Inter',sans-serif;
+font-size:16px;
+line-height:1.6;
+overflow-x:hidden;
+}
+
+h1,h2,h3,.display{
+font-family:'Space Grotesk',sans-serif;
+font-weight:700;
+letter-spacing:-0.02em;
+line-height:1.05;
+}
+
+.mono{
+font-family:'JetBrains Mono',monospace;
+letter-spacing:0.02em;
+}
+
+a{color:inherit;text-decoration:none;}
+
+:focus-visible{outline:2px solid var(--data);outline-offset:3px;}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+
+/* ===== NAV ===== */
+header{
+position:fixed;top:0;left:0;right:0;z-index:100;
+background:rgba(10,14,19,0.85);
+backdrop-filter:blur(10px);
+border-bottom:1px solid var(--line);
+}
+nav{
+display:flex;align-items:center;justify-content:space-between;
+padding:18px 28px;max-width:1180px;margin:0 auto;
+}
+.logo{
+font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;
+display:flex;align-items:center;gap:10px;
+}
+.logo-dot{width:9px;height:9px;border-radius:50%;background:var(--signal);
+box-shadow:0 0 0 4px rgba(255,90,31,0.15);
+animation:pulse 2.4s infinite ease-in-out;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+.nav-links{display:flex;gap:34px;align-items:center;}
+.nav-links a{font-size:14.5px;color:var(--muted);transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{
+background:var(--signal);color:#0A0E13;padding:10px 20px;border-radius:3px;
+font-weight:600;font-size:14px;
+}
+.nav-cta:hover{background:#ff7440;}
+
+.burger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer;}
+
+/* ===== HUD STRIP ===== */
+.hud{
+border-top:1px solid var(--line);
+background:var(--surface);
+overflow:hidden;
+white-space:nowrap;
+}
+.hud-track{
+display:inline-flex;gap:48px;padding:7px 0;
+font-size:11.5px;color:var(--data);
+animation:scrollHud 22s linear infinite;
+}
+.hud-track span{color:var(--muted);}
+.hud-track b{color:var(--data);font-weight:500;}
+@keyframes scrollHud{
+0%{transform:translateX(0);}
+100%{transform:translateX(-50%);}
+}
+@media (prefers-reduced-motion: reduce){
+.hud-track{animation:none;}
+.logo-dot{animation:none;}
+}
+
+/* ===== HERO ===== */
+.hero{
+position:relative;
+padding:200px 0 120px;
+background:
+radial-gradient(ellipse at 75% 0%, rgba(255,90,31,0.10), transparent 55%),
+radial-gradient(ellipse at 10% 30%, rgba(46,230,214,0.07), transparent 50%);
+}
+.contours{
+position:absolute;inset:0;z-index:0;opacity:0.5;pointer-events:none;
+}
+.hero-inner{position:relative;z-index:1;max-width:760px;}
+.eyebrow{
+display:inline-flex;align-items:center;gap:8px;
+font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--signal);
+border:1px solid rgba(255,90,31,0.35);padding:6px 12px;border-radius:3px;
+margin-bottom:26px;
+}
+.hero h1{font-size:clamp(40px,6vw,72px);margin-bottom:22px;}
+.hero h1 em{font-style:normal;color:var(--signal);}
+.hero p.lead{font-size:18px;color:var(--muted);max-width:540px;margin-bottom:38px;}
+.hero-ctas{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:64px;}
+.btn-primary{
+background:var(--signal);color:#0A0E13;padding:14px 26px;border-radius:3px;
+font-weight:600;font-size:14.5px;display:inline-flex;align-items:center;gap:8px;
+transition:background 0.2s, transform 0.2s;
+}
+.btn-primary:hover{background:#ff7440;transform:translateY(-1px);}
+.btn-ghost{
+border:1px solid var(--line);padding:14px 26px;border-radius:3px;
+font-weight:600;font-size:14.5px;color:var(--text);transition:border-color 0.2s,background 0.2s;
+}
+.btn-ghost:hover{border-color:var(--data);background:rgba(46,230,214,0.05);}
+
+/* telemetry readout card */
+.readout{
+display:grid;grid-template-columns:repeat(4,1fr);
+border:1px solid var(--line);border-radius:6px;overflow:hidden;
+background:rgba(18,22,29,0.6);
+max-width:680px;
+}
+.readout div{
+padding:18px 20px;border-right:1px solid var(--line);
+}
+.readout div:last-child{border-right:none;}
+.readout .label{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:6px;}
+.readout .val{font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--text);font-weight:500;}
+.readout .val.accent{color:var(--data);}
+
+/* ===== SECTION SHARED ===== */
+section{padding:110px 0;}
+.section-head{max-width:600px;margin-bottom:64px;}
+.section-head .tag{
+font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--data);
+text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;display:block;
+}
+.section-head h2{font-size:clamp(28px,4vw,42px);}
+.section-head p{color:var(--muted);margin-top:14px;font-size:16px;max-width:520px;}
+
+.divider{height:1px;background:var(--line);width:100%;}
+
+/* ===== SERVICES ===== */
+.services{background:var(--surface);}
+.service-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+.service-card{
+background:var(--surface);padding:42px;transition:background 0.25s;
+position:relative;
+}
+.service-card:hover{background:var(--surface-2);}
+.service-code{
+font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--signal);
+margin-bottom:20px;display:block;
+}
+.service-card h3{font-size:22px;margin-bottom:12px;}
+.service-card p{color:var(--muted);font-size:14.5px;margin-bottom:18px;}
+.service-list{list-style:none;font-size:13.5px;color:var(--muted);}
+.service-list li{padding:4px 0;padding-left:16px;position:relative;}
+.service-list li::before{content:'';position:absolute;left:0;top:11px;width:6px;height:1px;background:var(--data);}
+
+/* ===== COVERAGE ===== */
+.coverage-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:start;}
+.region-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+.region{background:var(--surface);padding:20px 22px;}
+.region .name{font-weight:600;font-size:15px;margin-bottom:4px;}
+.region .coord{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);}
+.base-note{
+border:1px solid var(--line);border-radius:6px;padding:26px;background:var(--surface);
+}
+.base-note .label{font-size:11px;color:var(--data);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;display:block;}
+.base-note p{color:var(--muted);font-size:14.5px;}
+
+/* ===== PROCESS ===== */
+.process{background:var(--surface);}
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line);}
+.step{padding:36px 30px;border-right:1px solid var(--line);position:relative;}
+.step:last-child{border-right:none;}
+.step .num{font-family:'JetBrains Mono',monospace;color:var(--signal);font-size:13px;margin-bottom:18px;display:block;}
+.step h3{font-size:17px;margin-bottom:10px;}
+.step p{color:var(--muted);font-size:14px;}
+
+/* ===== TRUST ===== */
+.trust-row{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);flex-wrap:wrap;}
+.trust-item{flex:1;min-width:200px;background:var(--surface);padding:28px 26px;}
+.trust-item .v{font-family:'JetBrains Mono',monospace;color:var(--data);font-size:22px;margin-bottom:6px;}
+.trust-item .l{color:var(--muted);font-size:13px;}
+
+/* ===== CONTACT ===== */
+.contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:60px;}
+.contact-info p{color:var(--muted);margin-bottom:28px;max-width:420px;}
+.contact-line{display:flex;flex-direction:column;gap:4px;margin-bottom:24px;}
+.contact-line .l{font-size:11px;color:var(--data);text-transform:uppercase;letter-spacing:0.08em;}
+.contact-line .v{font-size:16px;font-weight:500;}
+.form{border:1px solid var(--line);border-radius:6px;padding:34px;background:var(--surface);}
+.field{margin-bottom:18px;}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:0.06em;}
+.field input,.field select,.field textarea{
+width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;
+padding:11px 14px;color:var(--text);font-family:inherit;font-size:14.5px;
+}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--data);outline-offset:1px;}
+.field textarea{resize:vertical;min-height:90px;}
+
+/* ===== FOOTER ===== */
+footer{border-top:1px solid var(--line);padding:50px 0 30px;}
+.footer-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:30px;margin-bottom:40px;}
+.footer-links{display:flex;gap:30px;}
+.footer-links a{color:var(--muted);font-size:14px;}
+.footer-links a:hover{color:var(--text);}
+.copyright{color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:900px){
+.nav-links{display:none;}
+.burger{display:block;}
+.service-grid{grid-template-columns:1fr;}
+.coverage-layout{grid-template-columns:1fr;}
+.process-grid{grid-template-columns:1fr;}
+.step{border-right:none;border-bottom:1px solid var(--line);}
+.contact-layout{grid-template-columns:1fr;}
+.readout{grid-template-columns:repeat(2,1fr);}
+.trust-item{min-width:45%;}
+}
+@media (max-width:560px){
+.hero{padding:160px 0 80px;}
+section{padding:80px 0;}
+.region-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<header>
+<nav>
+<div class="logo"><span class="logo-dot"></span>ALBA AERIAL</div>
+<div class="nav-links">
+<a href="#services">Services</a>
+<a href="#coverage">Coverage</a>
+<a href="#process">Process</a>
+<a href="#contact" class="nav-cta">Request a quote</a>
+</div>
+<button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">☰</button>
+</nav>
+<div class="hud">
+<div class="hud-track mono" id="hudTrack">
+<span>STATUS</span> <b>AIRBORNE OPS — SCOTLAND</b>
+<span>CAA OPERATOR</span> <b id="opId">UAS.OP.000412</b>
+<span>LAT/LONG</span> <b id="coords">56.4907°N 4.2026°W</b>
+<span>ALT</span> <b id="alt">118m AGL</b>
+<span>LINK</span> <b>RTK FIXED</b>
+<span>STATUS</span> <b>AIRBORNE OPS — SCOTLAND</b>
+<span>CAA OPERATOR</span> <b id="opId2">UAS.OP.000412</b>
+<span>LAT/LONG</span> <b id="coords2">56.4907°N 4.2026°W</b>
+<span>ALT</span> <b id="alt2">118m AGL</b>
+<span>LINK</span> <b>RTK FIXED</b>
+</div>
+</div>
+</header>
+
+<!-- mobile menu -->
+<div id="mobileMenu" style="display:none;position:fixed;inset:0;z-index:99;background:#0A0E13;padding:100px 28px 28px;">
+<div style="display:flex;flex-direction:column;gap:26px;font-size:22px;font-family:'Space Grotesk',sans-serif;">
+<a href="#services">Services</a>
+<a href="#coverage">Coverage</a>
+<a href="#process">Process</a>
+<a href="#contact">Request a quote</a>
+</div>
+</div>
+
+<main>
+<section class="hero">
+<svg class="contours" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
+<path d="M-50,520 C150,460 300,560 500,500 C700,440 850,540 1250,470" stroke="#262C36" stroke-width="1" fill="none"/>
+<path d="M-50,570 C150,510 300,610 500,550 C700,490 850,590 1250,520" stroke="#262C36" stroke-width="1" fill="none"/>
+<path d="M-50,620 C150,560 300,660 500,600 C700,540 850,640 1250,570" stroke="#262C36" stroke-width="1" fill="none"/>
+<path d="M-50,140 C200,90 400,180 650,110 C850,60 1000,150 1250,90" stroke="#262C36" stroke-width="1" fill="none"/>
+<path d="M-50,190 C200,140 400,230 650,160 C850,110 1000,200 1250,140" stroke="#262C36" stroke-width="1" fill="none"/>
+</svg>
+<div class="wrap hero-inner">
+<span class="eyebrow">● BASED IN SCOTLAND · FLYING NATIONWIDE</span>
+<h1>Eyes in Scotland's <em>sky</em>, for whatever you need to see.</h1>
+<p class="lead">Aerial photography, mapping, agricultural monitoring and inspections — flown by CAA-certified pilots, from the Borders to the Isles.</p>
+<div class="hero-ctas">
+<a href="#contact" class="btn-primary">Request a quote →</a>
+<a href="#services" class="btn-ghost">See services</a>
+</div>
+<div class="readout">
+<div><span class="label">Sites flown</span><span class="val accent" id="statSites">0</span></div>
+<div><span class="label">Hectares mapped</span><span class="val accent" id="statHectares">0</span></div>
+<div><span class="label">Regions covered</span><span class="val">14</span></div>
+<div><span class="label">Insurance cover</span><span class="val">£5M</span></div>
+</div>
+</div>
+</section>
+
+<div class="wrap"><div class="divider"></div></div>
+
+<section id="services" class="services">
+<div class="wrap">
+<div class="section-head">
+<span class="tag">What we fly</span>
+<h2>Four ways to put a drone to work.</h2>
+<p>Every mission is planned around your site, your timeline, and UK airspace rules — not a one-size package.</p>
+</div>
+<div class="service-grid">
+<div class="service-card">
+<span class="service-code">PHOTO / 01</span>
+<h3>Aerial photography & film</h3>
+<p>Property, tourism, events and brand content shot from angles a ladder or a long lens can't reach.</p>
+<ul class="service-list">
+<li>Property & estate marketing</li>
+<li>Event & tourism film</li>
+<li>4K & stills delivery, same-week turnaround</li>
+</ul>
+</div>
+<div class="service-card">
+<span class="service-code">MAP / 02</span>
+<h3>Mapping & surveying</h3>
+<p>Orthomosaic maps, volumetric stockpile surveys and construction progress tracking, captured in a single flight.</p>
+<ul class="service-list">
+<li>Orthomosaics & 3D models</li>
+<li>Volumetric & topographic survey</li>
+<li>Construction progress monitoring</li>
+</ul>
+</div>
+<div class="service-card">
+<span class="service-code">AGRI / 03</span>
+<h3>Agricultural monitoring</h3>
+<p>NDVI crop health imaging, livestock counts and land condition assessment for farms and estates.</p>
+<ul class="service-list">
+<li>NDVI crop health mapping</li>
+<li>Livestock & land surveys</li>
+<li>Seasonal monitoring packages</li>
+</ul>
+</div>
+<div class="service-card">
+<span class="service-code">INSPECT / 04</span>
+<h3>Inspections</h3>
+<p>Close-range inspection of roofs, solar arrays, masts and turbines — without scaffolding or rope access.</p>
+<ul class="service-list">
+<li>Roof & solar panel inspection</li>
+<li>Telecom mast & turbine survey</li>
+<li>Thermal imaging on request</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+
+<section id="coverage">
+<div class="wrap">
+<div class="section-head">
+<span class="tag">Where we fly</span>
+<h2>Based centrally, flying the whole country.</h2>
+</div>
+<div class="coverage-layout">
+<div class="region-grid">
+<div class="region"><div class="name">Edinburgh & Lothians</div><div class="coord mono">55.95°N 3.19°W</div></div>
+<div class="region"><div class="name">Glasgow & Central Belt</div><div class="coord mono">55.86°N 4.25°W</div></div>
+<div class="region"><div class="name">Highlands</div><div class="coord mono">57.48°N 4.22°W</div></div>
+<div class="region"><div class="name">Aberdeenshire</div><div class="coord mono">57.15°N 2.10°W</div></div>
+<div class="region"><div class="name">Scottish Borders</div><div class="coord mono">55.55°N 2.78°W</div></div>
+<div class="region"><div class="name">Isles (Skye, Orkney, Shetland)</div><div class="coord mono">60.15°N 1.15°W</div></div>
+</div>
+<div class="base-note">
+<span class="label">Home base</span>
+<p>Operating out of central Scotland with same-day reach across the Central Belt, and scheduled missions further north and into the islands. If your site's on the map, we can plan a flight to it — talk to us about timing and access.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="process" class="process">
+<div class="wrap">
+<div class="section-head">
+<span class="tag">How it works</span>
+<h2>From enquiry to delivered footage.</h2>
+</div>
+</div>
+<div class="wrap">
+<div class="process-grid">
+<div class="step">
+<span class="num mono">01</span>
+<h3>Brief us</h3>
+<p>Tell us the site, the goal, and the deadline. We'll scope the right type of flight.</p>
+</div>
+<div class="step">
+<span class="num mono">02</span>
+<h3>Flight plan & permissions</h3>
+<p>We check airspace, NOTAMs and landowner permission, and confirm a flight window.</p>
+</div>
+<div class="step">
+<span class="num mono">03</span>
+<h3>Mission day</h3>
+<p>Our pilot flies the site on schedule, with weather contingency built in.</p>
+</div>
+<div class="step">
+<span class="num mono">04</span>
+<h3>Data delivery</h3>
+<p>Edited footage, maps or reports land in your inbox — typically within a week.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="trust-row">
+<div class="trust-item"><div class="v mono">GVC</div><div class="l">CAA-certified remote pilots</div></div>
+<div class="trust-item"><div class="v mono">£5M</div><div class="l">Public liability insurance</div></div>
+<div class="trust-item"><div class="v mono">OSC</div><div class="l">Operational authorisation for BVLOS & urban ops</div></div>
+<div class="trust-item"><div class="v mono">24H</div><div class="l">Typical quote turnaround</div></div>
+</div>
+</div>
+</section>
+
+<section id="contact">
+<div class="wrap">
+<div class="section-head">
+<span class="tag">Get in touch</span>
+<h2>Tell us what you need flown.</h2>
+</div>
+<div class="contact-layout">
+<div class="contact-info">
+<p>Send over a few details and we'll come back with availability and a quote — usually within a working day.</p>
+<div class="contact-line"><span class="l">Email</span><span class="v">fly@scottish.drone.gu</span></div>
+<div class="contact-line"><span class="l">Phone</span><span class="v">+44 7000 000 000</span></div>
+<div class="contact-line"><span class="l">Operating hours</span><span class="v">Mon–Sat, daylight flying windows</span></div>
+</div>
+<form class="form" onsubmit="return false;">
+<div class="field">
+<label for="name">Name</label>
+<input id="name" type="text" placeholder="Your name">
+</div>
+<div class="field">
+<label for="email">Email</label>
+<input id="email" type="email" placeholder="you@example.com">
+</div>
+<div class="field">
+<label for="service">Service</label>
+<select id="service">
+<option>Aerial photography & film</option>
+<option>Mapping & surveying</option>
+<option>Agricultural monitoring</option>
+<option>Inspections</option>
+<option>Not sure yet</option>
+</select>
+</div>
+<div class="field">
+<label for="details">Site & details</label>
+<textarea id="details" placeholder="Location, date, what you need captured..."></textarea>
+</div>
+<button type="submit" class="btn-primary" style="width:100%;justify-content:center;">Send enquiry</button>
+</form>
+</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap">
+<div class="footer-top">
+<div class="logo"><span class="logo-dot"></span>ALBA AERIAL</div>
+<div class="footer-links">
+<a href="#services">Services</a>
+<a href="#coverage">Coverage</a>
+<a href="#contact">Contact</a>
+</div>
+</div>
+<div class="copyright">
+<span>© 2026 Alba Aerial. CAA-registered remote pilot operator.</span>
+<span class="mono">scottish.drone.gu</span>
+</div>
+</div>
+</footer>
+
+<script>
+// mobile menu toggle
+const burger = document.getElementById('burger');
+const menu = document.getElementById('mobileMenu');
+burger.addEventListener('click', () => {
+const open = menu.style.display === 'block';
+menu.style.display = open ? 'none' : 'block';
+burger.setAttribute('aria-expanded', String(!open));
+burger.textContent = open ? '☰' : '✕';
+});
+menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+menu.style.display = 'none';
+burger.textContent = '☰';
+burger.setAttribute('aria-expanded', 'false');
+}));
+
+// animated stat counters
+function animateCount(el, target, suffix){
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+el.textContent = target + (suffix||'');
+return;
+}
+let current = 0;
+const step = Math.max(1, Math.round(target/40));
+const tick = () => {
+current += step;
+if (current >= target){ el.textContent = target + (suffix||''); return; }
+el.textContent = current + (suffix||'');
+requestAnimationFrame(tick);
+};
+tick();
+}
+const sitesEl = document.getElementById('statSites');
+const hectaresEl = document.getElementById('statHectares');
+const obs = new IntersectionObserver(entries => {
+entries.forEach(entry => {
+if (entry.isIntersecting){
+animateCount(sitesEl, 240, '+');
+animateCount(hectaresEl, 3100, '+');
+obs.disconnect();
+}
+});
+}, {threshold:0.4});
+obs.observe(sitesEl);
+
+// subtle live coordinate jitter in HUD (cosmetic telemetry feel)
+if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+const coordEls = [document.getElementById('coords'), document.getElementById('coords2')];
+const altEls = [document.getElementById('alt'), document.getElementById('alt2')];
+setInterval(() => {
+const lat = (56.4907 + (Math.random()-0.5)*0.01).toFixed(4);
+const lon = (4.2026 + (Math.random()-0.5)*0.01).toFixed(4);
+const alt = 110 + Math.round(Math.random()*16);
+coordEls.forEach(el => el && (el.textContent = ${lat}°N ${lon}°W));
+altEls.forEach(el => el && (el.textContent = ${alt}m AGL));
+}, 2200);
+}
+</script>
+
+</body>
+</html>
